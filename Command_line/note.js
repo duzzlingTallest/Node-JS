@@ -3,7 +3,8 @@ const loadNote = () => {
     try{
         const dataBuffer = fs.readFileSync('./note.json')
         return JSON.parse(data)
-    } catch(a) {
+    } 
+    catch(e) {
         return[]
     }
 }
