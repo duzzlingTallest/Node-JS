@@ -2,144 +2,129 @@
 //    install = npm i json
 //   localhost:27017 ==> 127.0.0.1:27017
 
-// var Mongodb = require('mongodb').Mongodb
-var Mongodb = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient
 
-//  Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb',function(err,db) {
-//      console.log("DB Created Successfully....!");
+
+// Created Db
+
+// MongoClient.connect("mongodb://127.0.0.1:27017/KaushalDb", function (err,client) {
+//     console.log("Database Created Successfully...!");
+// })
+
+// Created Collection
+
+// MongoClient.connect("mongodb://127.0.0.1:27017/", function (err,client) {
+//     const user = client.db("KaushalDb")
+//     user.createCollection('users',function (err,data) {
+//         console.log("Collection Created Successfully...!!")
+//     })
+// })
+
+// Insert Single Recored....
+
+// MongoClient.connect("mongodb://127.0.0.1:27017/", function (err,client) {
+//     const user = client.db("KaushalDb")
+//     const mydata = {'name':'Kaushal','email':'Kaushal@gmail.com','address':'Surat'}
+//     user.collection('users').insertOne(mydata,function (err,data) {
+//         console.log("Inserted Successfully...!!")
+//     })
+// })
+
+// Insert Many.....
+
+// MongoClient.connect('mongodb://127.0.0.1:27017/', function (err, client) {
+//   const user = client.db('KaushalDb');
+//   const mydata = [
+//     { name: 'sam', email: 'sam@gmail.com', address: 'pune' },
+//     { name: 'jay', email: 'jay@gmail.com', address: 'baroda' },
+//   ];
+//   user.collection('users').insertMany(mydata, function (err, data) {
+//     console.log('Inserted Successfully...!!');
+//   });
+// });
+
+//Select All...
+
+// MongoClient.connect("mongodb://127.0.0.1:27017", function (err, client) {
+//     const user = client.db('KaushalDb')
+//     user.collection('users').find({}).toArray(function(err,data){
+//         console.log(data)
+//     })
+// })
+
+
+//  Find One.....
+
+//  MongoClient.connect("mongodb://127.0.0.1:27017", function (err, client) {
+//      const user = client.db('KaushalDb')
+//      user.collection('users').find({name:'jay'}).toArray(function(err,data){
+//          console.log(data)
+//      }) 
 //  })
 
- Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb',function(err,db) {
+// Delete One
+ 
+// MongoClient.connect("mongodb://127.0.0.1:27017", function (err, client) {
+//      const user = client.db('KaushalDb')
+//      user.collection('users').deleteOne({ name: 'jay' }, function (err, data) {
+//          console.log("sucessfuly deleted....")
+//      })
+//  })
+
+// Update...
+
+// MongoClient.connect("mongodb://127.0.0.1:27017", function (err, client) {
+//     const user = client.db('KaushalDb')
+
+//     const searchname = {name:'Kaushal'}
+//     const newname = {$set:  {name: "Kaushal Damani"} }
+
+//     user.collection('users').updateOne(searchname, newname, function (err, data) {
+//         console.log("sucessfuly updated....")
+//     })
+// })
+
+
+// Product / Lg,Nokia...
+
+// MongoClient.connect('mongodb://127.0.0.1:27017', function (err, client) {
+//     const user = client.db('KaushalDb')
+//     var products = [{ name: "lg" }, { name: "nokia" }]
+//     user.collection('products').insertMany(products, function (err, data) {
+//         console.log('Data inserted successfully ...')
+
+//     })
+// })
+
+// order pandding.... 
+
+// MongoClient.connect('mongodb://127.0.0.1:27017',function(err,client){
+//   const user =client.db('KaushalDb')
+//   var orders = [ { status: "pending",product_id:2 }, { status: "complet",product_id:1 }]
+//   user.collection('orders').insertMany(orders,function(err,data){
+//     console.log('Data inserted successfully ...')
+
+//   })  
+// })
+
+// Marge Table....
+
+MongoClient.connect('mongodb://127.0.0.1:27017', function (err, db) {
     const user = db.db('KaushalDb')
-    const mydata = [{Name:'sam','Email':'sam@gmail.com',Address:'surat'}]
-    user.collection('users').insertMany(mydata,function(){
-        console.log('inserted...');
-    }) 
-     console.log("DB Created Successfully....!");
- })
-
-//   Create Collection
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb', function (err,db) {
-//      const users = db.db("KaushalDb")
-//      users.createCollection('users',function (err,data) {
-//          console.log("Collection Created Successfully...!!");
-//      })
-//  })
-
-//  .insertOne
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb', function (err,db) {
-//      const users = db.db("KaushalDb")
-//      var mydata = { Name:"Kaushal", Address:"Surat", Email:"kaushaldamani386@gmail.com"};
-//      users.collection('users').insertOne(mydata,function (err,data) {
-//          console.log("Data Inserted Successfully.....!!");
-//      })
-//  })
+    user.collection('orders').aggregate([
+        {
+            $lookup: {
+                from: 'products',
+                localField: 'id',
+                foreignField: 'product_id',
+                as: 'orderdetails'
 
 
+            }
+        }
+    ]).toArray(function (err, data) {
+        console.log(JSON.stringify(data))
+    })
 
 
-//  .findOne
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb', function (err,db) {
-//      const users = db.db("KaushalDb")
-
-//      users.collection('users').findOne({},function (err,data) {
-//          console.log(data);
-//      })
-//  })
-
-// Select all
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb',function(err,db){
-//    const user = db.db('KaushalDb')
-
-//    user.collection('users').find({}).toArray(function(err,data){
-//      console.log(data)
-
-//    })
-//  })
-
-//   .find({},{projection:{address:0}}).toArray
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017/KaushalDb',function(err,db){
-//    const user = db.db('KaushalDb')
-
-//    user.collection('users').find({},{projection:{address:0}}).toArray(function(err,data){
-//      console.log(data)
-
-//    })
-//  })
-
-//   Find One
-//   Mongodb.connect("mongodb:127.0.0.1:27017/", function (err, db) {
-//       const user = db.db('KaushalDb')
-//       user.collection('users').find({name:'Kaushal'}).toArray(function(err,data){
-//           console.log(data)
-//       })
-//   })
-
-//   Find One
-//   Mongodb.connect("mongodb:127.0.0.1:27017/", function (err, db) {
-//       const user = db.db('KaushalDb')
-//       user.collection('users').find({name:'jay'}).toArray(function(err,data){
-//           console.log(data)
-//       })
-//   })
-
-//   Delete One
-//   Mongodb.connect("mongodb:127.0.0.1:27017/", function (err, db) {
-//       const user = db.db('KaushalDb')
-//       user.collection('users').deleteOne({ name: 'Kaushal' }, function (err, data) {
-//           console.log("sucessfuly deleted....")
-//       })
-//   })
-
-//  Update
-//  Mongodb.connect("mongodb:127.0.0.1:27017/", function (err, db) {
-//      const user = db.db('KaushalDb')
-
-//      const searchname = {name:'kushal'}
-//      const newname = {$set:  {name: "Kaushal1-"} }
-
-//      user.collection('users').updateOne(searchname, newname, function (err, data) {
-//          console.log("sucessfuly updated....")
-//      })
-//  })
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017', function (err, db) {
-//      const user = db.db('KaushalDb')
-//      var products = [{ name: "lg" }, { name: "Apple" }]
-//      user.collection('products').insertMany(products, function (err, data) {
-//          console.log('Data inserted successfully ...')
-
-//      })
-//  })
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017',function(err,db){
-//    const user = db.db('KaushalDb')
-//    var orders = [ { status: "pending",product_id:2 }, { status: "complet",product_id:1 }]
-//    user.collection('orders').insertMany(orders,function(err,data){
-//      console.log('Data inserted successfully ...')
-
-//    })
-//  })
-
-//  Mongodb.connect('mongodb:127.0.0.1:27017', function (err, db) {
-//      const user = db.db('KaushalDb')
-//      user.collection('orders').aggregate([
-//          {
-//              $lookup: {
-//                  from: 'products',
-//                  localField: 'id',
-//                  foreignField: 'product_id',
-//                  as: 'orderdetails'
-
-//              }
-//          }
-//      ]).toArray(function (err, data) {
-//          console.log(JSON.stringify(data))
-//      })
-
-//  })
+})
